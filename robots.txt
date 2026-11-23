@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://d1sc0d3r.github.io/discord-account-manager/sitemap.xml

@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>DiscoBox: Discord account manager and token checker</title>
+<meta name="description" content="DiscoBox is a Windows app to manage Discord accounts: bulk token checks through per-account proxies, groups and tags, Chrome token login, scoped sends.">
+<link rel="canonical" href="https://d1sc0d3r.github.io/discord-account-manager/">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://d1sc0d3r.github.io/discord-account-manager/">
+<meta property="og:title" content="DiscoBox: Discord account manager and token checker">
+<meta property="og:description" content="Bulk token checks through per-account proxies, groups and tags, Chrome token login, scoped sends. Free and open source for Windows.">
+<meta property="og:image" content="https://d1sc0d3r.github.io/discord-account-manager/img/accounts.png">
+<meta property="og:image:width" content="2480">
+<meta property="og:image:height" content="1520">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="DiscoBox: Discord account manager and token checker">
+<meta name="twitter:description" content="Bulk token checks through per-account proxies, groups and tags, Chrome token login, scoped sends. Free and open source for Windows.">
+<meta name="twitter:image" content="https://d1sc0d3r.github.io/discord-account-manager/img/accounts.png">
+<link rel="icon" type="image/svg+xml" href="favicon.svg">
+<link rel="stylesheet" href="style.css">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "SoftwareApplication",
+  "name": "DiscoBox",
+  "operatingSystem": "Windows 10, Windows 11",
+  "applicationCategory": "UtilitiesApplication",
+  "description": "Discord account manager and token checker for Windows. Bulk token checks through per-account proxies, groups and tags, Chrome token login, scoped channel sends.",
+  "url": "https://d1sc0d3r.github.io/discord-account-manager/",
+  "downloadUrl": "https://github.com/d1sc0d3r/discord-token-checker/releases/latest",
+  "softwareVersion": "0.2.0",
+  "license": "https://github.com/d1sc0d3r/discord-token-checker/blob/main/LICENSE",
+  "keywords": "discord account manager, discord token checker, discord alt manager, discord token login, discord multi account tool, discord token checker github",
+  "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" },
+  "author": { "@type": "Person", "name": "d1sc0d3r", "url": "https://github.com/d1sc0d3r" }
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    {
+      "@type": "Question",
+      "name": "Is DiscoBox a spam bot?",
+      "acceptedAnswer": { "@type": "Answer", "text": "No, and keeping it that way is on you. The core is checking tokens and managing accounts. Sending exists as one action among many, and it only touches channels the account already belongs to, with a guild filter, delays, daily caps and a hard stop on captcha. Point it at your own servers." }
+    },
+    {
+      "@type": "Question",
+      "name": "Where do my tokens live?",
+      "acceptedAnswer": { "@type": "Answer", "text": "In %AppData%\DiscoBox as json on your disk. Nothing uploads anywhere: no server, no telemetry, no phone-home. Log lines mask tokens and proxy passwords at write time. Anyone with your Windows session can still read that file, so treat the machine as part of the setup." }
+    },
+    {
+      "@type": "Question",
+      "name": "Do I need proxies for every account?",
+      "acceptedAnswer": { "@type": "Answer", "text": "For anything beyond storage, yes. Checks and sends go out through the account's own proxy so Discord sees a consistent IP per account. Paid private proxies, one per account or a shared pool with sticky sessions. Public and free proxies get accounts deauthorized fast." }
+    },
+    {
+      "@type": "Question",
+      "name": "Will checking tokens get accounts limited?",
+      "acceptedAnswer": { "@type": "Answer", "text": "A check is a single REST call through the account's proxy, the same request the desktop client makes at startup. What gets accounts limited is behavior: joins from flagged invites, instant mass sends on fresh accounts, retrying past a captcha. The app stops a run at the first captcha instead of pushing." }
+    },
+    {
+      "@type": "Question",
+      "name": "Is it free and open source?",
+      "acceptedAnswer": { "@type": "Answer", "text": "Yes. MIT license, source and release zips on GitHub, no premium tier, no keys, no signup. Builds are self-contained, so no .NET install either." }
+    }
+  ]
+}
+</script>
+</head>
+<body>
+
+<header class="top">
+  <a class="logo" href="/">DiscoBox</a>
+  <nav>
+    <a href="#manage">what it manages</a>
+    <a href="#check">token checking</a>
+    <a href="#chrome">chrome login</a>
+    <a href="#setup">setup</a>
+    <a href="#faq">faq</a>
+    <a class="gh" href="https://github.com/d1sc0d3r/discord-token-checker">github</a>
+  </nav>
+</header>
+
+<main>
+
+<section class="hero">
+  <h1>Discord account manager and token checker for Windows</h1>
+  <p class="lead">DiscoBox keeps your Discord accounts in one place: import
+  token lists, check them through their own proxies, browse any account in
+  its own Chrome profile. A desktop app, not a web service, not a telegram
+  bot. Your tokens, your disk.</p>
+  <p class="cta">
+    <a class="btn" href="https://github.com/d1sc0d3r/discord-token-checker/releases/latest">download v0.2.0</a>
+    <a class="btn ghost" href="https://github.com/d1sc0d3r/discord-token-checker">source on github</a>
+    <span class="note">free, open source, Windows 10/11 x64</span>
+  </p>
+  <figure>
+    <img src="img/accounts.png" width="2480" height="1520" alt="DiscoBox accounts page with grouped Discord accounts, status, proxy and stats per row">
+    <figcaption>accounts page: groups, status, proxy and stats per row</figcaption>
+  </figure>
+</section>
+
+<section id="manage">
+  <h2>What it manages</h2>
+  <p>Accounts live in a local store on your machine, grouped and tagged the
+  way you work with them. Every action runs over the selection you made,
+  never over the whole list by accident.</p>
+  <ul>
+    <li>Import in token, email:password:token, token:proxy and a few more shapes, with a dry-run before anything is stored.</li>
+    <li>Groups, tags and a scope filter, so checks and tasks touch only the slice you selected.</li>
+    <li>Per-account proxy set by hand or drawn from a pool, HTTP and SOCKS5, sticky sessions synthesized for rotating residential lines.</li>
+    <li>Export back to txt or json; the txt roundtrip carries notes and the last task result.</li>
+    <li>Everything in %AppData%\DiscoBox, tokens and proxy creds masked in every log line.</li>
+  </ul>
+</section>
+
+<section id="check">
+  <h2>Token checking</h2>
+  <p>A check asks Discord who owns the token, through the account's own
+  proxy, and maps the answer to a status in the table. Dead tokens show up
+  before they waste a run.</p>
+  <ul>
+    <li>Status per account: valid, invalid or rate-limited, plus the check time.</li>
+    <li>fetch_stats adds servers, sendable channels and friends, cached on the row.</li>
+    <li>Select a few rows or the whole list; results land in the table and survive restarts.</li>
+    <li>Live trace per run in the account card and the logger tab.</li>
+  </ul>
+</section>
+
+<section id="chrome">
+  <h2>Token login in Chrome</h2>
+  <p>Open in Chrome unpacks the account's profile zip into a user-data dir,
+  starts Chrome behind a local proxy relay (GOST, for proxies with auth) and
+  injects the session token into the page, so the account is logged in
+  without a password. If Discord rotates the token mid-session, the app
+  stores the new one back. One session at a time, on purpose: two browsers
+  on one profile zip end badly.</p>
+</section>
+
+<section id="send">
+  <h2>Scoped sends</h2>
+  <p>The send action discovers guilds the account already belongs to,
+  computes effective channel permissions from roles and overwrites, and
+  posts there. Nothing joins servers on your behalf. Template pools rotate
+  the text, delays and daily caps pace the run, and a captcha in any answer
+  stops it instead of retrying.</p>
+</section>
+
+<section id="setup">
+  <h2>Quick start</h2>
+  <ol>
+    <li>Unpack the release zip anywhere and run the exe inside. First start creates %AppData%\DiscoBox.</li>
+    <li>Settings: point the Chrome path (Detect finds it usually) and gost.exe if you use authenticated proxies.</li>
+    <li>Proxies tab: add your lines, one per proxy, lists accepted. Accounts tab: Import, paste, Analyze for the dry-run, then Import.</li>
+    <li>Select accounts, hit Check. Double-click a row for the card; Open in Chrome and the send builder live there and in the Actions tab.</li>
+  </ol>
+  <p>The <a href="https://github.com/d1sc0d3r/discord-token-checker#readme">README</a>
+  covers every tab and lists the rough edges on purpose.</p>
+</section>
+
+<section id="requirements">
+  <h2>Requirements</h2>
+  <ul>
+    <li>Windows 10/11 x64; release zips are self-contained, no .NET install</li>
+    <li>Private HTTP or SOCKS5 proxies and the Discord tokens you manage</li>
+    <li>Optional, for account browsing and authenticated proxies: Google Chrome and GOST</li>
+  </ul>
+</section>
+
+<section id="faq">
+  <h2>FAQ</h2>
+
+  <h3>Is DiscoBox a spam bot?</h3>
+  <p>No, and keeping it that way is on you. The core is checking tokens and
+  managing accounts. Sending exists as one action among many, and it only
+  touches channels the account already belongs to, with a guild filter,
+  delays, daily caps and a hard stop on captcha. Point it at your own
+  servers.</p>
+
+  <h3>Where do my tokens live?</h3>
+  <p>In %AppData%\DiscoBox as json on your disk. Nothing uploads anywhere:
+  no server, no telemetry, no phone-home. Log lines mask tokens and proxy
+  passwords at write time. Anyone with your Windows session can still read
+  that file, so treat the machine as part of the setup.</p>
+
+  <h3>Do I need proxies for every account?</h3>
+  <p>For anything beyond storage, yes. Checks and sends go out through the
+  account's own proxy so Discord sees a consistent IP per account. Paid
+  private proxies, one per account or a shared pool with sticky sessions.
+  Public and free proxies get accounts deauthorized fast.</p>
+
+  <h3>Will checking tokens get accounts limited?</h3>
+  <p>A check is a single REST call through the account's proxy, the same
+  request the desktop client makes at startup. What gets accounts limited
+  is behavior: joins from flagged invites, instant mass sends on fresh
+  accounts, retrying past a captcha. The app stops a run at the first
+  captcha instead of pushing.</p>
+
+  <h3>Is it free and open source?</h3>
+  <p>Yes. MIT license, source and release zips on GitHub, no premium tier,
+  no keys, no signup. Builds are self-contained, so no .NET install
+  either.</p>
+</section>
+
+<section id="risk" class="warn">
+  <h2>Risk warning</h2>
+  <p>Discord's terms do not welcome automation on user tokens, and accounts
+  driven through their token can be limited or terminated at any point,
+  with no appeal path that cares about this app. Use accounts you own and
+  can afford to lose, keep sends inside servers you run, and do not point
+  any of this at communities you do not own. DiscoBox is automation
+  software with no warranty of any kind.</p>
+</section>
+
+</main>
+
+<footer>
+  <p>DiscoBox is free software under the MIT license. This page has no
+  trackers, no cookies and no analytics.</p>
+  <p>
+    <a href="https://github.com/d1sc0d3r/discord-token-checker">source and releases</a>
+    <a href="https://github.com/d1sc0d3r/discord-token-checker#readme">readme</a>
+    <a href="https://github.com/d1sc0d3r/discord-account-manager/blob/main/LICENSE">license</a>
+  </p>
+</footer>
+
+</body>
+</html>
